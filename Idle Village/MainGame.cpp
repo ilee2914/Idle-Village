@@ -1,4 +1,5 @@
 #include "MainGame.h"
+#include <filesystem>
 
 using namespace std;
 
@@ -7,7 +8,8 @@ MainGame::MainGame() {
 	screenWidth = 1280;
 	screenHeight = 720;
 	gameState = GameState::PLAY;
-	//fillPlants();
+	loadPerks(farm);
+	//fillPerks();
 }
 
 MainGame::~MainGame() {
@@ -29,24 +31,26 @@ void MainGame::reload() {
 	bg.display(window, screen);
 	for (int i = 0; i < dA; i++) {
 		buildings[i]->display(window, screen);
-		if (buildings[i]->checkClick(toCheck.x, toCheck.y)) {
-			activate(i);
+		if (activeBuilding < 0 && buildings[i]->checkClick(toCheck.x, toCheck.y)) {
+			processClick(i);
 		}
 	}
-	/*
-	Clickable * actShop = checkActive();
-	if (actShop != nullptr) {
-		//board.display(window, screen, gFont);
+	if (activeBuilding > 0) {
+		board.display(window, screen, dynamic_cast<Building*>(buildings[activeBuilding]), gFont);
 	}
-	*/
 	SDL_UpdateWindowSurface(window);
 }
 
-void MainGame::activate(int i) {
-	activeBuilding = i;
-	while (!clicks.empty()) {
-		clicks.pop();
+void MainGame::processClick(int i) {
+	if (i == 0) {
+		buildings[0]->registerClick(food);
 	}
+	else {
+		activeBuilding = i;
+		while (!clicks.empty()) {
+			clicks.pop();
+		}
+	}	
 }
 
 void MainGame::initSystems() {
@@ -74,8 +78,8 @@ void MainGame::gameLoop() {
 		if (time_counter > tick) {
 			time_counter -= tick;
 			/*
-			for (Clickable * i : plants) {
-				Plant * p = dynamic_cast<Plant*>(i);
+			for (Clickable * i : Perks) {
+				Perk * p = dynamic_cast<Perk*>(i);
 				leaf.changeByAmount(p->getGenRate());
 			}*/
 		}
@@ -89,7 +93,7 @@ void MainGame::processInput() {
 	char key;
 	SDL_PollEvent(&e);
 		switch (e.type) {
-		case SDL_MOUSEBUTTONDOWN:
+		case SDL_MOUSEBUTTONUP:
 			storeClick();
 			break;
 		case SDL_KEYDOWN:
@@ -109,6 +113,23 @@ void MainGame::storeClick() {
 	if (clicks.size() < 20) 
 		clicks.push(temp);
 }
+
+void MainGame::loadPerks(Building & type) {
+	namespace fs = std::experimental::filesystem;
+	std::string path = "Images/Perks/" + type.getName();
+	for (auto & p : fs::directory_iterator(path)) {
+		string filename = fs::path(p).stem().string();
+		vector<string> prks;
+		for (auto & s : fs::directory_iterator(p)) {
+			prks.push_back(fs::path(s).string());
+		}
+		for (int i = 0; i < prks.size(); i+=3) {
+			Perk * temp = new Perk(prks.at(i), prks.at(i+1), prks.at(i+2));
+			type.addPerk(temp);
+		}
+	}
+}
+
 /*
 void MainGame::checkClick(vector<Clickable*> items) {
 	int mouseX, mouseY;
@@ -135,48 +156,5 @@ Clickable * MainGame::checkActive() {
 		}
 	}
 	return nullptr;
-}
-
-void MainGame::fillPlants() {
-	Plant * daisy = new Plant{ "daisy", .1, 0, 1, 0, 20, .2, "Daisy", "Pretty flower" };
-	Plant * sunf = new Plant{ "sunflower", .1, 0, 1, 0, 128, .2, "SunFlower", "Pretty flower" };
-	Plant * apple = new Plant{ "appletree", .1, 0, 1, 0, 512, .4, "shit", "fuck" };
-	Plant * acorn = new Plant{ "acorn", .1, 0, 1, 0, 512, .4, "shit", "fuck" };
-	Plant * mush = new Plant{ "mushroom", .1, 0, 1, 0, 512, .4, "shit", "fuck" };
-	Plant * sap = new Plant{ "saplingTree", .1, 0, 1, 0, 512, .4, "shit", "fuck" };
-
-	plants.push_back(daisy);
-	plants.push_back(sunf);
-	plants.push_back(apple);
-	plants.push_back(acorn);
-	plants.push_back(mush);
-	plants.push_back(sap);
-
-
-	int currX = 280;
-	int currY = 320;
-	SDL_Surface * obj = IMG_Load("Images/border.png");
-	SDL_Rect itemRect;
-
-	itemRect.h = obj->h;
-	itemRect.w = obj->w;
-	
-	for (int i = 0; i < plants.size(); i++) {
-		plants.at(i)->changeXPos(currX);
-		plants.at(i)->changeYPos(currY);
-		plants.at(i)->changeHeight(itemRect.h);
-		plants.at(i)->changeWidth(itemRect.w);
-
-		if (i % 2 == 0) {
-			currX += 248;
-		}
-		else {
-			currX -= 248;
-			currY += 52;
-			
-		}
-		
-	}
-
 }
 */

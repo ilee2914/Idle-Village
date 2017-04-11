@@ -50,5 +50,8 @@
     <ClInclude Include="Currency.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Perk.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -1,9 +1,4 @@
 ﻿  MainGame.cpp
-  Generating Code...
-  Compiling...
-  main.cpp
-  Generating Code...
-  Skipping... (no relevant changes detected)
-  Garden.h
+c:\users\ilee2\desktop\idle village\idle village\maingame.cpp(126): warning C4018: '<': signed/unsigned mismatch
   Idle Village.vcxproj -> C:\Users\ilee2\Desktop\Idle Village\Debug\Idle Village.exe
   Idle Village.vcxproj -> C:\Users\ilee2\Desktop\Idle Village\Debug\Idle Village.pdb (Partial PDB)

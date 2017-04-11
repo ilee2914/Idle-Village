@@ -1,5 +1,6 @@
 #pragma once
 #include "Clickable.h"
+#include "Perk.h"
 
 class Building : public Clickable {
 public:
@@ -15,6 +16,7 @@ public:
 	Building(string imageLoc, int xPos, int yPos) {
 		string temp = "Images/Buildings/" + imageLoc + ".png";
 		item = (IMG_Load(temp.c_str()));
+		name = imageLoc;
 		x = xPos;
 		y = yPos;
 		h = item->h;
@@ -22,24 +24,15 @@ public:
 		endX = x + w;
 		endY = y + h;
 	}
-	
-	void registerClick(Currency& l, array<bool, 5> actives, int id) {
-		cout << "fuck";
-		bool set = false;
 
-		if (!set)
-			active = true;
-	}
-
-	bool isActive() {
-		return active;
-	}
-
-	vector<Clickable*> * getItems() {
+	vector<Perk*> getItems() {
 		return items;
 	}
 
+	void addPerk(Perk * x) {
+		items.push_back(x);
+	}
+
 private:
-	bool active = false;
-	vector<Clickable*> *items;
+	vector<Perk*> items;
 };

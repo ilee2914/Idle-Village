@@ -26,11 +26,12 @@ public :
 	}
 
 	SDL_Surface * getItem() { return item; }
+	string getName() { return name; }
 	int getXPos() { return x; }
 	int getYPos() { return y; }
 	int getHeight() { return h; }
 	int getWidth() { return w; }
-
+	
 	void changeXPos(int p) { x = p; }
 	void changeYPos(int p) { y = p; }
 	void changeHeight(int p) { h = p; }
@@ -54,6 +55,7 @@ public :
 	}
 protected :
 	SDL_Surface * item;
+	string name;
 	int x, y;
 	int endX, endY;
 	int h = 0;
