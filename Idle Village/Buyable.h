@@ -9,17 +9,16 @@ public:
 	~Buyable() { SDL_FreeSurface(item); }
 
 	virtual void buy(int a) = 0;
-	int getPrice() { return price; }
+	int getCost() { return cost; }
 
 	string getName() { return name; }
 	string getDescription() { return description; }
 	int getAmountOwned() { return amountOwned; }
 
 protected:
-	int price;
+	int cost;
 
 	string name;
 	string description;
 	int amountOwned;
-	int x, y, width, height;
 };

@@ -13,7 +13,7 @@ public:
 		delete item;
 	}
 
-	Building(string imageLoc, int xPos, int yPos) {
+	Building(string imageLoc, int xPos, int yPos, int bN) {
 		string temp = "Images/Buildings/" + imageLoc + ".png";
 		item = (IMG_Load(temp.c_str()));
 		name = imageLoc;
@@ -23,6 +23,7 @@ public:
 		w = item->w;
 		endX = x + w;
 		endY = y + h;
+		buildingNum = bN;
 	}
 
 	vector<Perk*> getItems() {
@@ -30,9 +31,25 @@ public:
 	}
 
 	void addPerk(Perk * x) {
+		x->loadData(buildingNum, perkCount, currX, currY);
 		items.push_back(x);
+		if (index % 3 != 0) {
+			currX += 103;
+		}
+		else {
+			currX -= 206;
+			currY += 105;
+		}
+		perkCount++;
+		index++;
 	}
 
 private:
 	vector<Perk*> items;
+	int buildingNum;
+	int perkCount = 0;
+	int currX = 345;
+	int currY = 195;
+	int index = 1;
+	
 };

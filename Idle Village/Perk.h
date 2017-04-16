@@ -3,6 +3,7 @@
 #include "SDL/SDL_image.h"
 #include <string>
 #include "Buyable.h"
+#include "PerkData.h"
 
 using namespace std;
 
@@ -16,29 +17,37 @@ public:
 		images[1] = IMG_Load(i2.c_str());
 		images[2] = IMG_Load(i3.c_str());
 		item = images[0];
-		/*baseRate = bR;
-		amountOwned = aO;
-		multiplier = m;
-		price = p;
-		truePrice = price;
-		priceRate = pR;
-		name = n;
-		description = d;*/
+	}
+
+	void loadData(int& buildingNum, int& perkNum, int& xStart, int& yStart) {
+		Data hold = PerkData::dataset[buildingNum][perkNum];
+		baseRate = hold.baseRate;
+		amountOwned = hold.amountOwned;
+		multiplier = hold.multiplier;
+		trueCost = hold.trueCost;
+		costRate = hold.costRate;
+		name = hold.name;
+		description = hold.description;
+		cost = (int)trueCost;
+		x = xStart;
+		y = yStart;
+		endX = x + 80;
+		endY = y + 80;
 	}
 
 	void buy(int a) {
 		amountOwned += a;
 		for (int i = 0; i < a; i++) {
-			truePrice *= (1 + priceRate);
+			trueCost *= (1 + costRate);
 		}
-		price = (int)truePrice;
+		cost = (int)trueCost;
 		updateGenRate();
 	}
 
 
 	void registerClick(Currency& c) {
-		if (c.getAmount() >= price) {
-			c.changeByAmount(-price);
+		if (c.getAmount() >= cost) {
+			c.changeByAmount(-cost);
 			buy(1);
 		}
 
@@ -52,8 +61,8 @@ protected:
 	double baseRate;
 	double multiplier;
 	double genRate;
-	double priceRate;
-	double truePrice;
+	double costRate;
+	double trueCost;
 
 	void addMultiplier(int m) {
 		multiplier += m;

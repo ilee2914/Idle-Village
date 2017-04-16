@@ -27,6 +27,9 @@
     <ClCompile Include="Garden.h">
       <Filter>Header Files</Filter>
     </ClCompile>
+    <ClCompile Include="PerkData.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MainGame.h">
@@ -51,6 +54,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Perk.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PerkData.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

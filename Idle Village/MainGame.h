@@ -14,6 +14,7 @@
 #include <array>
 
 #include "Clickable.h"
+
 #include "Object.h"
 #include "Board.h"
 #include "Building.h"
@@ -48,7 +49,7 @@ private:
 	void loadPerks(Building &);
 
 	void storeClick();
-	void processClick(int);
+	bool processClick(int);
 
 	SDL_Surface * screen;
 	SDL_Window* window;
@@ -58,14 +59,19 @@ private:
 	int screenHeight;
 	GameState gameState;
 
-	Object bg{ "Images/Background/background720.png", 0, 0 };
+	Object bg{ "Images/Background/background.png", 0, 0 };
+	
 	Currency food{ "corn" };
-	Building farm{ "farm", 150, 150 };
-	Garden garden{ farm.getXPos() + 9 , farm.getYPos() + 269 };
+	Building farm{ "farm", 156, 136, 0 };
+	Building market{ "market", 710, 323, 1 };
+	Building blacksmith{ "blacksmith", 926, 20, 2 };
+	Building barracks{ "barracks", 467, 6, 3 };
+	Object farmer{ "Images/Background/farmer.png", farm.getXPos() + 221, farm.getYPos() + 168 };
+	Garden garden{ farm.getXPos() + 5 , farm.getYPos() + 269 };
 	Board board;
 
-	static const int dA = 2;
-	vector<Clickable*> buildings = { &garden, &farm };
+	const int dA = 5;
+	vector<Clickable*> buildings = { &garden, &farm, &market, &blacksmith, &barracks};
 	int activeBuilding = -1;
 	vector<Clickable*> perks;
 	queue<Point> clicks;

@@ -6,7 +6,6 @@
 class Clickable : public Object {
 public:
 	virtual void registerClick(Currency&) {
-		cout << "shit";
 		return;
 	}
 	virtual void registerClick(Currency&, int, int) {

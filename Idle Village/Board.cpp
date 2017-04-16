@@ -8,6 +8,11 @@ Board::Board() {
 	x = (1280 - w) / 2;
 	y = (720 - h) / 2;
 
+	rects[0].h = h;
+	rects[0].w = w;
+	rects[0].x = x;
+	rects[0].y = y;
+
 	xButton = IMG_Load("Images/Boards/close_button.png");
 	xActive = IMG_Load("Images/Boards/close_button_active.png");
 
@@ -16,71 +21,57 @@ Board::Board() {
 	xX = 672 + x;
 	xY = y + 40;
 
+	rects[1].h = xH;
+	rects[1].w = xW;
+	rects[1].x = xX;
+	rects[1].y = xY;
+
 	buyButton = IMG_Load("Images/Boards/buy_button.png");
-	buyActive = IMG_Load("Images/Boards/but_button_active.png");
+	buyActive = IMG_Load("Images/Boards/buy_button_active.png");
+	buyUnable = IMG_Load("Images/Boards/buy_unable.png");
 
 	buyH = xButton->h;
 	buyW = xButton->w;
 	buyX = 576 + x;
 	buyY = y + 428;
-}
 
+	rects[2].h = buyH;
+	rects[2].w = buyW;
+	rects[2].x = buyX;
+	rects[2].y = buyY;
+}
 
 Board::~Board() {
 	delete item;
 }
 
-
-void Board::display(SDL_Window* window, SDL_Surface * screen, Building* active, TTF_Font *gFont) {
+void Board::display(SDL_Window* window, SDL_Surface* screen, Building* active, int& aB, int& xClick, int& yClick) {
 	screen = SDL_GetWindowSurface(window);
-	SDL_Rect itemRect;
-
-	itemRect.h = h;
-	itemRect.w = w;
-	itemRect.x = x;
-	itemRect.y = y;
-
-	SDL_BlitSurface(item, NULL, screen, &itemRect);
-	
-	itemRect.h = xH;
-	itemRect.w = xW;
-	itemRect.x = xX;
-	itemRect.y = xY;
-
-	SDL_BlitSurface(xButton, NULL, screen, &itemRect);
-
-	itemRect.h = buyH;
-	itemRect.w = buyW;
-	itemRect.x = buyX;
-	itemRect.y = buyY;
-
-	SDL_BlitSurface(buyButton, NULL, screen, &itemRect);
-	
-	TTF_Font * font = TTF_OpenFont("Fonts/SqueakyChalkSound.ttf", 17);
-/*
-	for (Clickable * x : active->getItems()) {
-		Buyable * i = dynamic_cast<Buyable*>(x);
-		i->display(window, screen, currX, currY);
-		itemRect.x = currX;
-		itemRect.y = currY-5;
-		SDL_BlitSurface(obj, NULL, screen, &itemRect);
-		write(font, i->getName(), currX + 50, currY - 5, window, screen);
-		write(font, to_string((i->getPrice())), currX + 50, currY + 20, window, screen);
-		write(font, to_string(i->getAmountOwned()), currX + 230, currY + 0, window, screen);
-		
-		if (index % 2 == 0) {
-			currX += 248;
-		}
-		else {
-			currX -= 248;
-			currY += 52;
-		}
-
-		index++;
+	SDL_BlitSurface(item, NULL, screen, &rects[0]);
+	if (handleClick(rects[1], xClick, yClick)) {
+		aB = -1;
+		selected = NULL;
+		return;
 	}
-*/
+	SDL_BlitSurface(xButton, NULL, screen, &rects[1]);
+	if (!selected) 
+		selected = active->getItems()[0];
+	TTF_Font * font = TTF_OpenFont("Fonts/alterebro.ttf", 17);
+	for (Perk * p : active->getItems()) {
+		p->display(window, screen);
+		if (p->checkClick(xClick, yClick)) {
+			selected = p;
+		}
+	}
+	SDL_BlitSurface(selected->getItem(), NULL, screen, &selectedRect);
+	SDL_BlitSurface(buyButton, NULL, screen, &rects[2]);
 	TTF_CloseFont(font);
-	//SDL_FreeSurface(obj);
+}
+
+bool Board::handleClick(SDL_Rect& r, int& xC, int& yC) {
+	int endX = r.x + r.w;
+	int endY = r.y + r.h;
+	return (xC >= r.x && xC <= endX && yC >= r.y && yC <= endY);
 }
 
 void Board::write(TTF_Font * font, string message, int x, int y, SDL_Window* window, SDL_Surface * screen) {
