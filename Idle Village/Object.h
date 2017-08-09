@@ -53,6 +53,10 @@ public :
 
 		SDL_BlitSurface(item, NULL, screen, &itemRect);
 	}
+
+	void optimize(SDL_Surface* screen) {
+		item = SDL_ConvertSurface(item, screen->format, NULL);
+	}
 protected :
 	SDL_Surface * item;
 	string name;

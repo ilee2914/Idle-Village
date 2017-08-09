@@ -34,11 +34,11 @@ public:
 		x->loadData(buildingNum, perkCount, currX, currY);
 		items.push_back(x);
 		if (index % 3 != 0) {
-			currX += 103;
+			currX += 109;
 		}
 		else {
-			currX -= 206;
-			currY += 105;
+			currX -= 218;
+			currY += 107;
 		}
 		perkCount++;
 		index++;
@@ -48,8 +48,8 @@ private:
 	vector<Perk*> items;
 	int buildingNum;
 	int perkCount = 0;
-	int currX = 345;
-	int currY = 195;
+	int currX = 339;
+	int currY = 170;
 	int index = 1;
 	
 };

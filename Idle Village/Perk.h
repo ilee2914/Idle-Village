@@ -4,6 +4,7 @@
 #include <string>
 #include "Buyable.h"
 #include "PerkData.h"
+#include "PerkEffects.h"
 
 using namespace std;
 
@@ -24,52 +25,104 @@ public:
 		baseRate = hold.baseRate;
 		amountOwned = hold.amountOwned;
 		multiplier = hold.multiplier;
-		trueCost = hold.trueCost;
-		costRate = hold.costRate;
+		
+		genRate = Number(baseRate);
 		name = hold.name;
 		description = hold.description;
-		cost = (int)trueCost;
+		current = hold.current;
+		total = hold.total;
+		next = hold.next;
+		
+		trueCost = hold.trueCost;
+		baseCost = hold.baseCost;
+		cost = (int)trueCost.getAmount();
+
+		code = hold.code;
 		x = xStart;
 		y = yStart;
 		endX = x + 80;
 		endY = y + 80;
 	}
 
-	void buy(int a) {
-		amountOwned += a;
-		for (int i = 0; i < a; i++) {
-			trueCost *= (1 + costRate);
+	string getName() { return name; }
+	string getCurrentDesc() { return current; }
+	string getTotalDesc() { return total; }
+	string getNextDesc() { return next; }
+
+	/*
+	 * Price formula : m^(ax) + b
+	 * m - multiplier
+	 * a - rate
+	 * x - amount owned
+	 * b - base cost
+	 */
+
+	/*
+	 * Cost formula : bx^(a)m^(cx)
+	 * b - base gen
+	 * x - amount owned
+	 * a - rate
+	 * m - multiplier
+	 * c - arbitrary number
+	 */
+	bool buy(int a, Currency& curr) {
+		
+		int amount = curr.getAmount();
+		if (amount < cost) {
+			return false;
 		}
-		cost = (int)trueCost;
+		amountOwned += a;
+		curr.changeByAmount(-cost);
+		updateCost();
 		updateGenRate();
+		return true;
+	}
+
+	bool canBuy(Currency& curr) {
+		return curr.getAmount() >= cost;
 	}
 
 
 	void registerClick(Currency& c) {
-		if (c.getAmount() >= cost) {
-			c.changeByAmount(-cost);
-			buy(1);
-		}
 
 	}
-	double getGenRate() {
-		return genRate;
+
+	string getGenRate() {
+		return genRate.shortHand();
 	}
+	
+	string getNextGenRate() {
+		double temp = (baseRate * multiplier);
+		return to_string((int)(temp + genRate.getTrueAmount()));
+	}
+
+
 
 protected:
 	SDL_Surface * images[3];
-	double baseRate;
+	double baseRate;		//base generation
 	double multiplier;
-	double genRate;
-	double costRate;
-	double trueCost;
+	Number genRate;			//Number
+	Number baseCost;		//Number
+	Number trueCost;		//base cost
+	string current;
+	string total;
+	string next;
+	int code;
 
 	void addMultiplier(int m) {
 		multiplier += m;
 		updateGenRate();
 	}
 	void updateGenRate() {
-		genRate = (baseRate * amountOwned) * multiplier;
+		double temp = (baseRate * multiplier);
+		genRate.changeByAmount(temp);
+		cout << genRate.getTrueAmount();
+		PerkEffects::updateValues(temp, code);
+	}
+	void updateCost() {
+		trueCost.setAmount(baseCost.getAmount() * pow(1.25, amountOwned));
+		cost = (int)trueCost.getAmount();
 	}
 
 };

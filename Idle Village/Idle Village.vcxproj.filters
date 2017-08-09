@@ -30,6 +30,9 @@
     <ClCompile Include="PerkData.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="PerkEffects.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MainGame.h">
@@ -57,6 +60,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="PerkData.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PerkEffects.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Number.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

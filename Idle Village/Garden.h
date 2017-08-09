@@ -1,5 +1,6 @@
 #pragma once
 #include "Clickable.h"
+#include "PerkEffects.h"
 
 class Garden : public Clickable {
 public:
@@ -17,10 +18,14 @@ public:
 		item = (IMG_Load(temp.c_str()));
 		x = xPos;
 		y = yPos;
+		h = item->h;
+		w = item->w;
+		endX = x + w;
+		endY = y + h;
 	}
 
-	void registerClick(Currency& l, vector<Clickable*> signs) {
-		l.changeByAmount(1);
+	void registerClick(Currency& l) {
+		l.changeByAmount(PerkEffects::getClickValue().getAmount());
 	}
 
 	bool isActive() {

@@ -8,11 +8,11 @@ public:
 	Buyable() = default;
 	~Buyable() { SDL_FreeSurface(item); }
 
-	virtual void buy(int a) = 0;
+	virtual bool buy(int a, Currency& curr) = 0;
 	int getCost() { return cost; }
 
 	string getName() { return name; }
-	string getDescription() { return description; }
+	string getDesc() { return description; }
 	int getAmountOwned() { return amountOwned; }
 
 protected:

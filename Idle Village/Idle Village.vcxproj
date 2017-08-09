@@ -122,6 +122,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainGame.cpp" />
     <ClCompile Include="PerkData.cpp" />
+    <ClCompile Include="PerkEffects.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Board.h" />
@@ -129,10 +130,12 @@
     <ClInclude Include="Clickable.h" />
     <ClInclude Include="Building.h" />
     <ClInclude Include="Currency.h" />
+    <ClInclude Include="Number.h" />
     <ClInclude Include="Perk.h" />
     <ClInclude Include="MainGame.h" />
     <ClInclude Include="Object.h" />
     <ClInclude Include="PerkData.h" />
+    <ClInclude Include="PerkEffects.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
