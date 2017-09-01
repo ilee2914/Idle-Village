@@ -13,6 +13,7 @@ MainGame::MainGame() {
 
 MainGame::~MainGame() {
 	window = NULL;
+	TTF_CloseFont(gFont);
 }
 
 void MainGame::run() {
@@ -21,13 +22,24 @@ void MainGame::run() {
 }
 
 void MainGame::initSystems() {
-	SDL_Init(SDL_INIT_EVERYTHING);
-	IMG_Init(IMG_INIT_PNG);
-	TTF_Init();
-	gFont = TTF_OpenFont("Fonts/alterebro.ttf", 65);
+	if (SDL_Init(SDL_INIT_EVERYTHING) == -1) {
+		cout << "Could not initialize SDL" << endl;
+	}
+	if (IMG_Init(IMG_INIT_PNG) == -1) {
+		cout << "Could not initialize IMG" << endl;
+	}
 	SDL_CreateWindowAndRenderer(screenWidth, screenHeight, SDL_WINDOW_OPENGL, &window, &renderer);
 	screen = SDL_GetWindowSurface(window);
-	SDL_SetSurfaceBlendMode(screen, SDL_BLENDMODE_BLEND);
+	if (screen == NULL) {
+		cout << "Screen is broken" << endl;
+	}
+	if (TTF_Init() == -1) {
+		cout << "Could not initialize TTF" << endl;
+	}
+	gFont = TTF_OpenFont("Fonts/alterebro.ttf", 65);
+	if (!gFont) {
+		cout << "Font could not be opened" << endl;
+	}
 	bg.optimize(screen);
 	farm.optimize(screen);
 	market.optimize(screen);
@@ -41,6 +53,7 @@ void MainGame::initSystems() {
 	darkOL = SDL_CreateRGBSurface(0, screenWidth, screenHeight, 32, 0, 0, 0, 0);
 	SDL_SetSurfaceBlendMode(darkOL, SDL_BLENDMODE_BLEND);
 	SDL_SetSurfaceAlphaMod(darkOL, 127);
+	
 }
 
 void MainGame::reload() {

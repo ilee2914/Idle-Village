@@ -65,26 +65,29 @@ void Board::display(SDL_Window* window, SDL_Surface* screen, Building* active, i
 			selected = p;
 		}
 	}
-	int temp = 370;
+	int temp = 280; //370
 	write(selected->getName(), 777, 952, 180, gFont, window, screen);
-	write(selected->getDesc(), 690, 280, gFont, window, screen);
+	//write(selected->getDesc(), 690, 280, gFont, window, screen);
 
-	string output = "";
 	write("Level : " + to_string(selected->getAmountOwned()), 690, temp, gFont, window, screen);
 	temp += 20;
 
 	write(selected->getCurrentDesc() + selected->getGenRate(), 690, temp, gFont, window, screen);
 	temp += 20;
-	if (selected->getTotalDesc().compare(".") != 0) {
+	/*if (selected->getTotalDesc().compare(".") != 0) {
 		write(selected->getTotalDesc() + selected->getGenRate(), 690, temp, gFont, window, screen);
 		temp += 20;
-	}
+	}*/
 	temp += 20;
 	write("Price: " + to_string(selected->getCost()), 690, temp, gFont, window, screen);
 	temp += 20;
 	write(selected->getNextDesc() + selected->getNextGenRate(), 690, temp, gFont, window, screen);
 
 	SDL_BlitSurface(selected->getItem(), NULL, screen, &selectedRect);
+	SDL_BlitScaled(selected->getLevel(0), NULL, screen, &upgrade1);
+	SDL_BlitScaled(selected->getLevel(1), NULL, screen, &upgrade2);
+	SDL_BlitScaled(selected->getLevel(2), NULL, screen, &upgrade3);
+	
 	if (selected->canBuy(curr)) {
 		SDL_BlitSurface(buyButton, NULL, screen, &rects[2]);
 	}
@@ -102,6 +105,9 @@ void Board::display(SDL_Window* window, SDL_Surface* screen, Building* active, i
 	if (handleClick(rects[2], xClick, yClick)) {
 		selected->buy(1, curr);
 	}
+	if (handleClick(upgrade1, xClick, yClick)) {
+
+	}
 }
 
 bool Board::handleClick(SDL_Rect& r, int& xC, int& yC) {
@@ -111,8 +117,8 @@ bool Board::handleClick(SDL_Rect& r, int& xC, int& yC) {
 }
 
 void Board::write(string message, int x, int y, TTF_Font* gFont, SDL_Window* window, SDL_Surface * screen) {
-	screen = SDL_GetWindowSurface(window);
 	TTF_CloseFont(gFont);
+	screen = SDL_GetWindowSurface(window);
 	gFont = TTF_OpenFont("Fonts/alterebro.ttf", 28);
 	SDL_Color textColor{ 255, 255, 255 };
 	SDL_Surface * temp = TTF_RenderText_Blended(gFont, message.c_str(), textColor);

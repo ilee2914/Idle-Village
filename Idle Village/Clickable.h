@@ -5,6 +5,9 @@
 
 class Clickable : public Object {
 public:
+	Clickable() {}
+	Clickable(string imageLoc, int xPos, int yPos) : Object(imageLoc, xPos, yPos){}
+
 	virtual void registerClick(Currency&) {
 		return;
 	}

@@ -13,16 +13,8 @@ public:
 		delete item;
 	}
 
-	Building(string imageLoc, int xPos, int yPos, int bN) {
-		string temp = "Images/Buildings/" + imageLoc + ".png";
-		item = (IMG_Load(temp.c_str()));
+	Building(string imageLoc, int xPos, int yPos, int bN) : Clickable("Images/Buildings/" + imageLoc + ".png", xPos, yPos){
 		name = imageLoc;
-		x = xPos;
-		y = yPos;
-		h = item->h;
-		w = item->w;
-		endX = x + w;
-		endY = y + h;
 		buildingNum = bN;
 	}
 

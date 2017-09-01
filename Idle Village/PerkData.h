@@ -10,11 +10,11 @@ struct Data {
 	string total;
 	string next;
 	int amountOwned;
-	double baseRate;
+	double baseGenRate;
 	double multiplier;
 	double genRate;
 	double baseCost;
-	double trueCost;
+	double costRate;
 	int code;
 };
 

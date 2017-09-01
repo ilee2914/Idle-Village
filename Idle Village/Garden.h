@@ -13,16 +13,7 @@ public:
 		delete item;
 	}
 
-	Garden(int xPos, int yPos) {
-		string temp = "Images/Buildings/garden.png";
-		item = (IMG_Load(temp.c_str()));
-		x = xPos;
-		y = yPos;
-		h = item->h;
-		w = item->w;
-		endX = x + w;
-		endY = y + h;
-	}
+	Garden(int xPos, int yPos) :Clickable("Images/Buildings/garden.png", xPos, yPos) {}
 
 	void registerClick(Currency& l) {
 		l.changeByAmount(PerkEffects::getClickValue().getAmount());

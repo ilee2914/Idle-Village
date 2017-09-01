@@ -23,6 +23,9 @@ private:
 
 	SDL_Rect rects[3];
 	SDL_Rect selectedRect{ 672, 170, 80, 80 };
+	SDL_Rect upgrade1{ 690, 410, 40, 40 };
+	SDL_Rect upgrade2{ 750, 410, 40, 40 };
+	SDL_Rect upgrade3{ 810, 410, 40, 40 };
 	SDL_Rect nameRect{ 100, 100, 100, 100 };
 
 	Perk * selected;

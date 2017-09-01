@@ -22,22 +22,26 @@ public:
 
 	void loadData(int& buildingNum, int& perkNum, int& xStart, int& yStart) {
 		Data hold = PerkData::dataset[buildingNum][perkNum];
-		baseRate = hold.baseRate;
+		baseGenRate = hold.baseGenRate;
 		amountOwned = hold.amountOwned;
 		multiplier = hold.multiplier;
 		
-		genRate = Number(baseRate);
+		genRate = hold.genRate;
 		name = hold.name;
 		description = hold.description;
 		current = hold.current;
 		total = hold.total;
 		next = hold.next;
 		
-		trueCost = hold.trueCost;
 		baseCost = hold.baseCost;
+		trueCost = baseCost;
+		costRate = hold.costRate;
 		cost = (int)trueCost.getAmount();
 
 		code = hold.code;
+
+		currentCostRate = 1;
+
 		x = xStart;
 		y = yStart;
 		endX = x + 80;
@@ -71,8 +75,8 @@ public:
 		if (amount < cost) {
 			return false;
 		}
-		amountOwned += a;
 		curr.changeByAmount(-cost);
+		amountOwned += a;
 		updateCost();
 		updateGenRate();
 		return true;
@@ -92,36 +96,43 @@ public:
 	}
 	
 	string getNextGenRate() {
-		double temp = (baseRate * multiplier);
+		double temp = (baseGenRate * multiplier);
 		return to_string((int)(temp + genRate.getTrueAmount()));
 	}
 
-
+	SDL_Surface* getLevel(int i) {
+		return images[i];
+	}
 
 protected:
 	SDL_Surface * images[3];
-	double baseRate;		//base generation
+	double baseGenRate;		//base generation
 	double multiplier;
 	Number genRate;			//Number
 	Number baseCost;		//Number
 	Number trueCost;		//base cost
+	double costRate;
 	string current;
 	string total;
 	string next;
 	int code;
 
+	double currentCostRate;
+
 	void addMultiplier(int m) {
 		multiplier += m;
 		updateGenRate();
 	}
+
 	void updateGenRate() {
-		double temp = (baseRate * multiplier);
+		double temp = (baseGenRate * multiplier);
 		genRate.changeByAmount(temp);
-		cout << genRate.getTrueAmount();
+		cout << temp << " " << genRate.getTrueAmount();
 		PerkEffects::updateValues(temp, code);
 	}
 	void updateCost() {
-		trueCost.setAmount(baseCost.getAmount() * pow(1.25, amountOwned));
+		currentCostRate *= costRate;
+		trueCost.setAmount(baseCost.getAmount() * currentCostRate);
 		cost = (int)trueCost.getAmount();
 	}
 
