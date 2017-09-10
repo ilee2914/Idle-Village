@@ -3,6 +3,21 @@
 #include <vector>
 using namespace std;
 
+struct UpgradeEffect {
+	string desc;
+	int building;		
+	int perkNumber;
+	double effectMultiplier;
+	double costReduction;
+};
+
+struct UpgradeData {
+	int upgradeLevel;
+	double baseCost;
+	double costMult;
+	vector<UpgradeEffect> effects;
+};
+
 struct Data {
 	string name;
 	string description;
@@ -15,6 +30,7 @@ struct Data {
 	double genRate;
 	double baseCost;
 	double costRate;
+	UpgradeData upgradeEffects;
 	int code;
 };
 

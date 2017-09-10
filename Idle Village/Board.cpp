@@ -8,10 +8,7 @@ Board::Board() {
 	x = (1280 - w) / 2;
 	y = (720 - h) / 2;
 
-	rects[0].h = h;
-	rects[0].w = w;
-	rects[0].x = x;
-	rects[0].y = y;
+	rects[0] = SDL_Rect{ x, y, h, w };
 
 	xButton = IMG_Load("Images/Boards/close_button.png");
 	xActive = IMG_Load("Images/Boards/close_button_active.png");
@@ -21,10 +18,7 @@ Board::Board() {
 	xX = 672 + x;
 	xY = y + 40;
 
-	rects[1].h = xH;
-	rects[1].w = xW;
-	rects[1].x = xX;
-	rects[1].y = xY;
+	rects[1] = SDL_Rect{ xX, xY, xH, xW };
 
 	buyButton = IMG_Load("Images/Boards/buy_button.png");
 	buyActive = IMG_Load("Images/Boards/buy_button_active.png");
@@ -35,10 +29,15 @@ Board::Board() {
 	buyX = 576 + x;
 	buyY = y + 448;
 
-	rects[2].h = buyH;
-	rects[2].w = buyW;
-	rects[2].x = buyX;
-	rects[2].y = buyY;
+	rects[2] = SDL_Rect{ buyX, buyY, buyH, buyW };
+
+	upgradeLoc = SDL_Rect{ 810, 390, 40, 40 };
+
+	upgradeBox = SDL_CreateRGBSurface(0, 300, 75, 32, 0, 0, 0, 0);
+	upgradeBoxLoc = SDL_Rect{ upgradeLoc.x + 20, upgradeLoc.y - upgradeBox->h + 20, 40, 40 };
+//	for (int i = 0; i < 3; i++) {
+//		= SDL_Rect{ upgrades[i].x + 20, upgrades[i].y - upgradeBox->h + 20, 40, 40 };
+//	}
 }
 
 Board::~Board() {
@@ -82,12 +81,14 @@ void Board::display(SDL_Window* window, SDL_Surface* screen, Building* active, i
 	write("Price: " + to_string(selected->getCost()), 690, temp, gFont, window, screen);
 	temp += 20;
 	write(selected->getNextDesc() + selected->getNextGenRate(), 690, temp, gFont, window, screen);
-
+	temp += 50;
 	SDL_BlitSurface(selected->getItem(), NULL, screen, &selectedRect);
-	SDL_BlitScaled(selected->getLevel(0), NULL, screen, &upgrade1);
-	SDL_BlitScaled(selected->getLevel(1), NULL, screen, &upgrade2);
-	SDL_BlitScaled(selected->getLevel(2), NULL, screen, &upgrade3);
+	write("Next upgrade : ", 690, temp, gFont, window, screen);
+	SDL_BlitScaled(selected->getLevel(0), NULL, screen, &upgradeLoc);
 	
+	int xPos, yPos;
+	SDL_GetMouseState(&xPos, &yPos);
+
 	if (selected->canBuy(curr)) {
 		SDL_BlitSurface(buyButton, NULL, screen, &rects[2]);
 	}
@@ -96,28 +97,32 @@ void Board::display(SDL_Window* window, SDL_Surface* screen, Building* active, i
 	}
 	
 	//Handle X click
-	if (handleClick(rects[1], xClick, yClick)) {
+	if (handleMouse(rects[1], xClick, yClick)) {
 		aB = -1;
 		selected = NULL;
 		return;
 	}
 	//Handle Buys
-	if (handleClick(rects[2], xClick, yClick)) {
+	if (handleMouse(rects[2], xClick, yClick)) {
 		selected->buy(1, curr);
 	}
-	if (handleClick(upgrade1, xClick, yClick)) {
-
+	if (handleMouse(upgradeLoc, xPos, yPos)) {
+		SDL_BlitSurface(upgradeBox, NULL, screen, &upgradeBoxLoc);
+		write("HelloHelloHelloHelloHello", upgradeBoxLoc.x + 10, upgradeBoxLoc.y, gFont, window, screen);
 	}
+	
 }
 
-bool Board::handleClick(SDL_Rect& r, int& xC, int& yC) {
+bool Board::handleMouse(SDL_Rect& r, int& xC, int& yC) {
 	int endX = r.x + r.w;
 	int endY = r.y + r.h;
 	return (xC >= r.x && xC <= endX && yC >= r.y && yC <= endY);
 }
 
 void Board::write(string message, int x, int y, TTF_Font* gFont, SDL_Window* window, SDL_Surface * screen) {
-	TTF_CloseFont(gFont);
+	if (gFont) {
+		TTF_CloseFont(gFont);
+	}
 	screen = SDL_GetWindowSurface(window);
 	gFont = TTF_OpenFont("Fonts/alterebro.ttf", 28);
 	SDL_Color textColor{ 255, 255, 255 };
